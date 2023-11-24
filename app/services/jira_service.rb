@@ -31,6 +31,10 @@ class JiraService
     request(:post, "#{BASE_URL}/rest/api/2/issue", payload: issue_data)
   end
 
+  def add_comment(issue_id, body)
+    request(:post, "#{BASE_URL}/rest/api/2/issue/#{issue_id}/comment", payload: { body: body })
+  end
+
   private
 
   def request(method, url, params = {})
