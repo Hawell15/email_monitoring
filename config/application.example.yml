@@ -1,0 +1,13 @@
+defaults: &defaults
+  jira:
+    username: "username"
+    token: "token"
+
+production:
+  <<: *defaults
+
+development:
+  <<: *defaults
+
+test:
+  <<: *defaults

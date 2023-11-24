@@ -2,8 +2,8 @@ class JiraService
   BASE_URL = 'https://saltedge.atlassian.net'
 
   def initialize
-    @username = ENV['JIRA_USERNAME']
-    @api_token = ENV['JIRA_API_TOKEN']
+    @username = Settings.jira.username
+    @api_token = Settings.jira.api_token
   end
 
   def create_issue
@@ -19,12 +19,7 @@ class JiraService
         issuetype: {
           name: 'Task'
         },
-        customfield_10180: {
-          value: 'Other'
-        },
-        description: description,
-        customfield_10000: 'Your Development Value',
-        customfield_10500: 'www.saltedge.com'
+        description: description
       }
     }
 
