@@ -1,0 +1,19 @@
+current directory: /Users/romanciobanu/Documents/rails/email_monitoring/vendor/bundle/ruby/2.7.0/gems/racc-1.7.3/ext/racc/cparse
+/Users/romanciobanu/.rvm/rubies/ruby-2.7.4/bin/ruby extconf.rb
+creating Makefile
+
+current directory: /Users/romanciobanu/Documents/rails/email_monitoring/vendor/bundle/ruby/2.7.0/gems/racc-1.7.3/ext/racc/cparse
+make DESTDIR\= sitearchdir\=./.gem.20231124-81748-s5l7u sitelibdir\=./.gem.20231124-81748-s5l7u clean
+
+current directory: /Users/romanciobanu/Documents/rails/email_monitoring/vendor/bundle/ruby/2.7.0/gems/racc-1.7.3/ext/racc/cparse
+make DESTDIR\= sitearchdir\=./.gem.20231124-81748-s5l7u sitelibdir\=./.gem.20231124-81748-s5l7u
+compiling cparse.c
+linking shared-object racc/cparse.bundle
+ld: warning: -multiply_defined is obsolete
+
+current directory: /Users/romanciobanu/Documents/rails/email_monitoring/vendor/bundle/ruby/2.7.0/gems/racc-1.7.3/ext/racc/cparse
+make DESTDIR\= sitearchdir\=./.gem.20231124-81748-s5l7u sitelibdir\=./.gem.20231124-81748-s5l7u install
+/Users/romanciobanu/homebrew/opt/coreutils/bin/ginstall -c -m 0755 cparse.bundle ./.gem.20231124-81748-s5l7u/racc
+
+current directory: /Users/romanciobanu/Documents/rails/email_monitoring/vendor/bundle/ruby/2.7.0/gems/racc-1.7.3/ext/racc/cparse
+make DESTDIR\= sitearchdir\=./.gem.20231124-81748-s5l7u sitelibdir\=./.gem.20231124-81748-s5l7u clean
