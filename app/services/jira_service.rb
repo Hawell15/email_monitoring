@@ -3,7 +3,7 @@ class JiraService
 
   def initialize
     @username = Settings.jira.username
-    @api_token = Settings.jira.api_token
+    @token = Settings.jira.token
   end
 
   def create_issue(parsed_email_data_json)
@@ -45,7 +45,7 @@ class JiraService
       headers: {
         'Accept' => 'application/json',
         'Content-type' => 'application/json',
-        'Authorization' => "Basic #{Base64.strict_encode64("#{@username}:#{@api_token}")}"
+        'Authorization' => "Basic #{Base64.strict_encode64("#{@username}:#{@token}")}"
       }
     )
 
