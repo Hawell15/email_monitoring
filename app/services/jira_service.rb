@@ -7,10 +7,10 @@ class JiraService
   end
 
   def create_issue(parsed_email_data_json)
-    subject   = parsed_email_data_json['subject']
-    body      = parsed_email_data_json['body']
-    bank_name = parsed_email_data_json['bank_name']
-    from      = parsed_email_data_json['from']
+    subject   = parsed_email_data_json[:subject]
+    body      = parsed_email_data_json[:body]
+    bank_name = parsed_email_data_json[:bank_name]
+    from      = parsed_email_data_json[:from]
 
     information_source = bank_name || from
     summary            = information_source.present? ? "[#{information_source}]: #{subject}" : subject
