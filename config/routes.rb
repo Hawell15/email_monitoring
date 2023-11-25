@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   get 'email/parse_emails'
+  get 'email/ping_bank'
   get 'email/connect_gmail_smpt'
   get 'oauth2callback', to: "email#callback"
   get 'email/connect_gmail'
