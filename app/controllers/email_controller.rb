@@ -5,13 +5,6 @@ require 'openai'
 require 'rest-client'
 require 'json'
 
-<<<<<<< HEAD
-require_relative 'helpers/helper.rb'
-
-
-
-=======
->>>>>>> e74282f (Removed unnecesary methods and did a small refactoring)
 class EmailController < ApplicationController
    include Helper
 
@@ -22,15 +15,11 @@ class EmailController < ApplicationController
   SCOPE = Google::Apis::GmailV1::AUTH_GMAIL_READONLY
   USER_ID = 'me'
 
-<<<<<<< HEAD
-  def connect_gmaila
-=======
   def parse_emails
     text = ''
   end
 
   def connect_gmail
->>>>>>> e74282f (Removed unnecesary methods and did a small refactoring)
     # Set up the OAuth 2.0 client
     client_id = Google::Auth::ClientId.from_file(CLIENT_SECRETS_PATH)
     token_store = Google::Auth::Stores::FileTokenStore.new(file: CREDENTIALS_PATH)
@@ -61,13 +50,9 @@ class EmailController < ApplicationController
       if message_hash[:subject][/\[OBG-\d+\]/]
         JiraService.new.add_comment(message)
       else
-<<<<<<< HEAD
         # parsed_email = get_custom_email_category(message_hash) #NOTE: Custome categorized
 
         parsed_email = parse_email(message_hash)
-=======
-        parsed_email = parse_email(message)
->>>>>>> 339ff39 (small refactoring)
 
         next if parsed_email[:category] == 'Other'
 
