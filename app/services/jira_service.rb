@@ -22,9 +22,11 @@ class JiraService
     body      = parsed_email[:body]
     bank_name = parsed_email[:bank_name]
     from      = parsed_email[:from]
+    category  = parsed_email[:category]
 
     information_source = bank_name || from
-    summary            = information_source.present? ? "[#{information_source}]: #{subject}" : subject
+    summary            = "[#{category}]: #{subject}"
+    summary            = "[#{information_source}]#{summary}" if information_source.present?
 
     {
       fields: {
