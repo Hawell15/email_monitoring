@@ -114,7 +114,7 @@ class EmailController < ApplicationController
       #{delimiter} characters.
 
       Classify each query into one of these categories:
-      API updates, Downtime information, Maintenance or Other.
+      API updates, Certificates expired, Maintenance or Other.
 
       Parse the email and extract the following field names:
       bank_name, country, summary, category,
