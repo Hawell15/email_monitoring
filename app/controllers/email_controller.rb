@@ -20,13 +20,13 @@ class EmailController < ApplicationController
   CLIENT_SECRETS_PATH = '/Users/romanciobanu/Downloads/client_secret_3.json'.freeze
   CREDENTIALS_PATH = File.join(Dir.home, '.credentials', 'gmail-ruby-quickstart.yaml').freeze
   SCOPE = Google::Apis::GmailV1::AUTH_GMAIL_READONLY
-  USER_ID = "me"
+  USER_ID = 'me'
 
 <<<<<<< HEAD
   def connect_gmaila
 =======
   def parse_emails
-    text = ""
+    text = ''
   end
 
   def connect_gmail
@@ -35,14 +35,13 @@ class EmailController < ApplicationController
     client_id = Google::Auth::ClientId.from_file(CLIENT_SECRETS_PATH)
     token_store = Google::Auth::Stores::FileTokenStore.new(file: CREDENTIALS_PATH)
     @authorizer = Google::Auth::UserAuthorizer.new(client_id, SCOPE, token_store)
-    # user_id = 'me'
 
     credentials = @authorizer.get_credentials(USER_ID)
 
     if credentials.nil?
 
       url = @authorizer.get_authorization_url(base_url: OOB_URI)
-      puts "Open the following URL in the browser and enter the resulting code after authorization:"
+      puts 'Open the following URL in the browser and enter the resulting code after authorization:'
       puts url
       code = gets
       byebug
@@ -74,13 +73,13 @@ class EmailController < ApplicationController
   end
 
   def callback
-    puts params["code"]
+    puts params['code']
     byebug
   end
 
   def messages(messages, service)
-    messages.map.with_index do |message, index|
-        full_message = service.get_user_message(USER_ID, message.id)
+    messages.map.with_index do |message, _index|
+      full_message = service.get_user_message(USER_ID, message.id)
 
       {
         subject: full_message.payload.headers.find { |header| header.name == 'Subject' }&.value,
@@ -89,12 +88,13 @@ class EmailController < ApplicationController
         receiver: full_message.payload.headers.find { |header| header.name == 'To' }&.value,
         message: full_message.payload.parts.first.body.data
       }
-    rescue
+    rescue StandardError
     end
   end
 
   def parse_email(message)
-    openai_client = OpenAI::Client.new(api_key: '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', default_engine: "ada")
+    openai_client = OpenAI::Client.new(api_key: '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',
+                                       default_engine: 'ada')
 
     user_message = <<~USER_MESSAGE
       Subject: "#{message[:subject]}"
@@ -106,7 +106,7 @@ class EmailController < ApplicationController
 
     USER_MESSAGE
 
-    delimiter = "####"
+    delimiter = '####'
     system_message = <<~SYSTEM_MESSAGE
       You will be provided with banks service emails.
       The customer service query will be delimited with
@@ -124,24 +124,21 @@ class EmailController < ApplicationController
       Provide your output in json format {"bank_name": "...", "country": "...", "summary": "....", "category": "..."  }
     SYSTEM_MESSAGE
 
-
-
     response = openai_client.completions(
-      engine: 'text-davinci-003',  # Use the appropriate engine
+      engine: 'text-davinci-003', # Use the appropriate engine
       prompt: system_message,
-      max_tokens: 150  # Adjust as needed
+      max_tokens: 150 # Adjust as needed
     )
 
-    json_data = response["choices"].first["text"]
+    json_data = response['choices'].first['text']
     data = JSON.parse(json_data)
 
     {
-      category: data["category"],
-      country_code:data["country_code"],
-      bank_name: data["bank_name"],
-      description: message[:message],
-      summary: data["summary"]
-
+      subject: message[:subject]
+      body: message[:message],
+      bank_name: data['bank_name'],
+      from: message[:sender],
+      category: data['category']
     }
   end
 
@@ -210,5 +207,4 @@ class EmailController < ApplicationController
   end
 end
 
-
- # subject = full_message.to_h[:payload][:headers].find { |header| header[:name] == 'Subject' }&.value
+# subject = full_message.to_h[:payload][:headers].find { |header| header[:name] == 'Subject' }&.value
