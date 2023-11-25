@@ -65,6 +65,9 @@ class EmailController < ApplicationController
         # parsed_email = get_custom_email_category(message_hash) #NOTE: Custome categorized
 
         parsed_email = parse_email(message_hash)
+
+        next if parsed_email[:category] == 'Other'
+
         JiraService.new.create_issue(parsed_email)
       end
     end
