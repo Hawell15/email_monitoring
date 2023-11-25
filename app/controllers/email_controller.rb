@@ -5,19 +5,19 @@ require 'openai'
 require 'rest-client'
 require 'json'
 
+require_relative 'helpers/helper.rb'
+
 
 
 class EmailController < ApplicationController
+   include Helper
+
   OOB_URI = 'http://localhost:3000'.freeze
   APPLICATION_NAME = 'Email Monitoring'.freeze
   CLIENT_SECRETS_PATH = '/Users/romanciobanu/Downloads/client_secret_3.json'.freeze
   CREDENTIALS_PATH = File.join(Dir.home, '.credentials', 'gmail-ruby-quickstart.yaml').freeze
   SCOPE = Google::Apis::GmailV1::AUTH_GMAIL_READONLY
   USER_ID = "me"
-
-  def parse_emails
-    text = ""
-  end
 
   def connect_gmaila
     # Set up the OAuth 2.0 client
@@ -54,8 +54,10 @@ class EmailController < ApplicationController
       if message_hash[:subject][/\[OBG-\d+\]/]
         add_comment_to_issue(message_hash)
       else
+        # categorized_message = get_custom_email_category(message_hash) #NOTE: Custome categorized
         categorized_message = get_email_category(message_hash)
         create_issue(categorized_message)
+      end
     end
   end
 
@@ -130,6 +132,45 @@ class EmailController < ApplicationController
       summary: data["summary"]
 
     }
+  end
+
+  def get_custom_email_category(message)
+    notification_scope = /Notification|Notice|Reminder/i
+    api_updates_scope  = /API (Updates|Changes|Enhancements|Modifications|Upgrades|Releases|Improvements|Versioning Changes)/i
+    certificates_scope = /(?:Certificate).*?(?:Renewal|Revocation|Validity|Expir|Key|Generation)/i
+    dates              = message[:message].scan(/(?:\b(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\s+\d{1,2})|\b(?:from?|until?) \d{1,2}\.\d{1,2}\.\d{4}\b/)
+
+    category = if message[:subject][api_updates_scope]
+      "API Updates"
+    elsif message[:subject][notification_scope]
+      "Notification"
+    elsif message[:subject][certificates_scope]
+      "Certificate"
+    else
+      "Other"
+    end
+
+    domains = [
+      "us","uk","ca","au","fr","de","jp","cn","ru","br","in","it","mx","es","nl","kr","sa","se","ch",
+      "pl","be","at","dk","fi","no","gr","cz","ro","hu","ar","tr","pt","nz","sg","za","ie","il","hk",
+      "vn","cl","id","ua","ae","tw","th","co","ma","eg","my","ph","pe","rs","hr","ve","pk","bg","sk",
+      "lt","si","do","lv","by","ng","ba","ke","cr","cy","tn","lu","ec","gt","uy","py","sv","hn","bo",
+      "md","et","jm","mu","bw","np","iq","lk","gh","am","kw","lb","tz","zm","mg","kg","ug","bn","me",
+      "gy","al","ug","dz","ni","cd","mo","kh","ht","bw","rw"
+    ]
+    row_email_domain   = message[:sender].split("@").last
+    email_domain       = row_email_domain.split(".").last
+    bank_name          = row_email_domain.split(".").first.capitalize
+    email_country_code = domains.detect { |country| country == email_domain }
+    country_code       = email_country_code.nil? ? "NaN" : email_country_code
+
+    compress({
+      category: category,
+      country_code: country_code,
+      bank_name: email_domain,
+      description: parse_description(message[:message]),
+      summary: dates
+    })
   end
 
 
