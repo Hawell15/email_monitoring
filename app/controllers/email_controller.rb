@@ -123,7 +123,7 @@ class EmailController < ApplicationController
     data = JSON.parse(json_data)
 
     {
-      subject: message[:subject]
+      subject: message[:subject],
       body: message[:message],
       bank_name: data['bank_name'],
       from: message[:sender],

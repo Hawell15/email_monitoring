@@ -18,15 +18,14 @@ class JiraService
   private
 
   def new_issue_payload(parsed_email)
-    subject   = parsed_email[:subject]
-    body      = parsed_email[:body]
-    bank_name = parsed_email[:bank_name]
-    from      = parsed_email[:from]
-    category  = parsed_email[:category]
+    subject   = parsed_email[:subject] || 'No subject'
+    body      = parsed_email[:body] || 'No body'
+    bank_name = parsed_email[:bank_name] || 'No bank name'
+    from      = parsed_email[:from] || 'No from'
+    category  = parsed_email[:category] || 'Other'
 
     information_source = bank_name || from
-    summary            = "[#{category}]: #{subject}"
-    summary            = "[#{information_source}]#{summary}" if information_source.present?
+    summary            = "[#{information_source}]: #{subject}" if information_source.present?
 
     {
       fields: {
@@ -37,7 +36,8 @@ class JiraService
           name: 'Task'
         },
         summary: summary,
-        description: body
+        description: body,
+        labels: [category.gsub(' ', '_')]
       }
     }
   end
