@@ -7,8 +7,8 @@ class JiraService
     @token = Settings.jira.token
   end
 
-  def create_issue(parsed_email_data_json)
-    request(:post, "#{BASE_URL}/rest/api/2/issue", payload: new_issue_payload(parsed_email_data_json))
+  def create_issue(parsed_email)
+    request(:post, "#{BASE_URL}/rest/api/2/issue", payload: new_issue_payload(parsed_email))
   end
 
   def add_comment(issue_id, body)
@@ -17,11 +17,11 @@ class JiraService
 
   private
 
-  def new_issue_payload(parsed_email_data_json)
-    subject   = parsed_email_data_json[:subject]
-    body      = parsed_email_data_json[:body]
-    bank_name = parsed_email_data_json[:bank_name]
-    from      = parsed_email_data_json[:from]
+  def new_issue_payload(parsed_email)
+    subject   = parsed_email[:subject]
+    body      = parsed_email[:body]
+    bank_name = parsed_email[:bank_name]
+    from      = parsed_email[:from]
 
     information_source = bank_name || from
     summary            = information_source.present? ? "[#{information_source}]: #{subject}" : subject
