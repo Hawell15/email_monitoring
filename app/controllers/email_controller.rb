@@ -57,13 +57,17 @@ class EmailController < ApplicationController
 
     result = service.list_user_messages(USER_ID, q: "after:#{start_date} before:#{end_date}")
     message_data = messages(result.messages, service)
-    @data = message_data.map do |message_hash|
+    @data = message_data.map do |message|
       if message_hash[:subject][/\[OBG-\d+\]/]
-        JiraService.new.add_comment(message_hash)
+        JiraService.new.add_comment(message)
       else
+<<<<<<< HEAD
         # parsed_email = get_custom_email_category(message_hash) #NOTE: Custome categorized
 
         parsed_email = parse_email(message_hash)
+=======
+        parsed_email = parse_email(message)
+>>>>>>> 339ff39 (small refactoring)
 
         next if parsed_email[:category] == 'Other'
 
