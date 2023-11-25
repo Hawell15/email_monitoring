@@ -5,10 +5,13 @@ require 'openai'
 require 'rest-client'
 require 'json'
 
+<<<<<<< HEAD
 require_relative 'helpers/helper.rb'
 
 
 
+=======
+>>>>>>> e74282f (Removed unnecesary methods and did a small refactoring)
 class EmailController < ApplicationController
    include Helper
 
@@ -19,16 +22,22 @@ class EmailController < ApplicationController
   SCOPE = Google::Apis::GmailV1::AUTH_GMAIL_READONLY
   USER_ID = "me"
 
+<<<<<<< HEAD
   def connect_gmaila
+=======
+  def parse_emails
+    text = ""
+  end
+
+  def connect_gmail
+>>>>>>> e74282f (Removed unnecesary methods and did a small refactoring)
     # Set up the OAuth 2.0 client
     client_id = Google::Auth::ClientId.from_file(CLIENT_SECRETS_PATH)
     token_store = Google::Auth::Stores::FileTokenStore.new(file: CREDENTIALS_PATH)
     @authorizer = Google::Auth::UserAuthorizer.new(client_id, SCOPE, token_store)
     # user_id = 'me'
 
-
     credentials = @authorizer.get_credentials(USER_ID)
-
 
     if credentials.nil?
 
@@ -41,7 +50,6 @@ class EmailController < ApplicationController
       credentials = @authorizer.get_and_store_credentials_from_code(user_id: USER_ID, code: code, base_url: OOB_URI)
     end
 
-
     service = Google::Apis::GmailV1::GmailService.new
     service.client_options.application_name = APPLICATION_NAME
     service.authorization = credentials
@@ -52,11 +60,12 @@ class EmailController < ApplicationController
     message_data = messages(result.messages, service)
     @data = message_data.map do |message_hash|
       if message_hash[:subject][/\[OBG-\d+\]/]
-        add_comment_to_issue(message_hash)
+        JiraService.new.add_comment(message_hash)
       else
-        # categorized_message = get_custom_email_category(message_hash) #NOTE: Custome categorized
-        categorized_message = get_email_category(message_hash)
-        create_issue(categorized_message)
+        # parsed_email = get_custom_email_category(message_hash) #NOTE: Custome categorized
+
+        parsed_email = parse_email(message_hash)
+        JiraService.new.create_issue(parsed_email)
       end
     end
   end
@@ -81,8 +90,7 @@ class EmailController < ApplicationController
     end
   end
 
-
-  def get_email_category(message)
+  def parse_email(message)
     openai_client = OpenAI::Client.new(api_key: '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', default_engine: "ada")
 
     user_message = <<~USER_MESSAGE
@@ -196,12 +204,6 @@ class EmailController < ApplicationController
       max_tokens: 10 # Adjust as needed
     )
 
-  end
-
-  def add_comment_to_issue(message)
-  end
-
-  def create_issue(message)
   end
 end
 
