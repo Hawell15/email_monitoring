@@ -20,7 +20,9 @@ gem 'googleauth'
 gem 'google-api-client'
 
 gem 'openai'
+# gem "ruby-openai"
 gem 'json'
+gem 'mail'
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 4.0'
 # Use Active Model has_secure_password
