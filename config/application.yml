@@ -1,7 +1,7 @@
 defaults: &defaults
   jira:
     username: "roman.ciobanu@saltedge.com"
-    token: "ATATT3xFfGF08_NzHn5IdlpfQHxbH1fkqn-muwi8_iQO_Ak9A-8vnWyui5J6a56VvHmWpA_8-KoTiyw8nYO4lDkA5hRfHZZ_DULMGe4xGpD1kjLW8P5OgZu-sN7jHM6j0KfLHgebGuMkQiEsLuI9Xng-sSsRYgHrrbV6pErCaciqe5iyQQ1DE3I=8F3C0629"
+    token: ""
 
 production:
   <<: *defaults
